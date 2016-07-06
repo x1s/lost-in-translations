@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.email = "dev@streetbees.com"
   gem.summary = "Ruby Translation Gem"
   gem.description = "Super light Translation Ruby Gem agnostic to your framework and source data"
-  gem.homepage = "https://github.com/streetbees/lost-in-translation"
+  gem.homepage = "https://github.com/streetbees/lost_in_translation"
 
   gem.files = `git ls-files`.split($/)
   gem.executables = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
