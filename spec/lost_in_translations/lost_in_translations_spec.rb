@@ -2,6 +2,52 @@ require 'spec_helper'
 
 describe LostInTranslations do
 
+  describe "#define_translation_methods" do
+    context "when the passed methods do not exist" do
+      before do
+        @user_class = Struct.new(:first_name, :last_name) do
+          include LostInTranslations
+        end
+
+        LostInTranslations.define_translation_methods(@user_class, :unknown)
+
+        @user = @user_class.new('Joao', 'Neve')
+      end
+
+      it "#unknown should be defined" do
+        expect(@user.respond_to?(:unknown)).to be true
+      end
+
+      it "#<I18n.available_locales>_unknown should be defined" do
+        I18n.available_locales.each do |locale|
+          expect(@user.respond_to?("#{locale}_unknown")).to be true
+        end
+      end
+    end
+
+    context "when the passed methods do exist" do
+      before do
+        @user_class = Struct.new(:first_name, :last_name) do
+          include LostInTranslations
+        end
+
+        LostInTranslations.define_translation_methods(@user_class, :first_name)
+
+        @user = @user_class.new('Joao', 'Neve')
+      end
+
+      it "#first_name should be defined" do
+        expect(@user.respond_to?(:first_name)).to be true
+      end
+
+      it "#<I18n.available_locales>_first_name should be defined" do
+        I18n.available_locales.each do |locale|
+          expect(@user.respond_to?("#{locale}_first_name")).to be true
+        end
+      end
+    end
+  end
+
   describe "#included" do
     context "when the object inherits from ActiveRecord" do
       before do

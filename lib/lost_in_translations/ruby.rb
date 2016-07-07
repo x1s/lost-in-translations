@@ -14,9 +14,11 @@ module LostInTranslations
     end
 
     def self.included(base_class)
-      base_class.include Base
+      base_class.send(:include, Base)
       base_class.extend ClassMethods
     end
+
+    include Base
 
     def translate(field, locale = I18n.locale)
       LostInTranslations.translate(self, field, locale) ||

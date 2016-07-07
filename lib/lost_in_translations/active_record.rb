@@ -10,7 +10,7 @@ module LostInTranslations
     end
 
     def self.included(base_class)
-      base_class.include Base
+      base_class.send(:include, Base)
       base_class.extend ClassMethods
     end
 

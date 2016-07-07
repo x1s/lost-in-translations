@@ -10,9 +10,9 @@ module LostInTranslations
   def self.included(base_class)
     if defined?(::ActiveRecord::Base) &&
        base_class.ancestors.include?(::ActiveRecord::Base)
-      base_class.include LostInTranslations::ActiveRecord
+      base_class.send(:include, LostInTranslations::ActiveRecord)
     else
-      base_class.include Ruby
+      base_class.send(:include, Ruby)
     end
   end
 
@@ -26,9 +26,24 @@ module LostInTranslations
 
   def self.define_translation_methods(object, *fields)
     fields.each do |field|
+      define_dynamic_translation_method(object, field)
+      define_particular_translation_method(object, field)
+    end
+  end
+
+  def self.define_dynamic_translation_method(object, method_name)
+    object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def #{method_name}
+        translate(:#{method_name}, I18n.locale)
+      end
+    RUBY
+  end
+
+  def self.define_particular_translation_method(object, method_name)
+    I18n.available_locales.each do |locale|
       object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{field}
-          translate(:#{field}, I18n.locale)
+        def #{locale}_#{method_name}
+          translate(:#{method_name}, :#{locale})
         end
       RUBY
     end

@@ -20,7 +20,7 @@ class User < Struct.new(:title, :first_name, :last_name)
   end
 end
 ```
-Class method **.translate** will redefine **#title** and **#first_name** instance methods in order to return the values that match the **I18n.locale** and the **attribute name** from the Hash returned by **#translation_data**, otherwise calls the original redefined method.
+Class method ```.translate``` will redefine ```#title``` and ```#first_name``` instance methods in order to return the values that match the ```I18n.locale``` and the ```attribute name``` from the Hash returned by ```#translation_data```, otherwise calls the original redefined method.
 
 ```ruby
 @user = User.new('Cavaleiro', 'Joao', 'Neve')
@@ -44,15 +44,23 @@ I18n.with_locale(:de) do
 end
 ```
 
-Instance method **#translate** is also available:
+Instance method ```#translate``` is also available:
 ```ruby
 @user.translate(:first_name, :fr) # returns 'Jean'
 @user.translate(:first_name, :en) # returns 'Jon'
 @user.translate(:first_name, :de) # returns 'Joao'
 ```
 
+And ```#<I18n.available_locales>_<translated_field>``` is also available:
+```ruby
+@user.fr_first_name # returns 'Jean'
+@user.en_first_name # returns 'Jon'
+@user.pt_first_name # returns 'Joao'
+@user.de_first_name # returns 'Joao'
+```
+
 ## 2) Ideal usage
-If your ActiveRecord Model has a json attribute called **translation_data**.
+If your ActiveRecord Model has a json attribute called ```translation_data```.
 ```ruby
 class CreateUsers < ActiveRecord::Migration
   def up
