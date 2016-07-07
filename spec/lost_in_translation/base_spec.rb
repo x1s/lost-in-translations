@@ -2,56 +2,65 @@ require 'spec_helper'
 
 describe LostInTranslation::Base do
 
-  describe '#translate' do
+  describe '.translation_data_field =' do
 
-    context "when translating a field" do
+    context "when it points to a real method" do
       before do
         @user_class = Struct.new(:first_name, :last_name) do
-          include LostInTranslation
+          include LostInTranslation::Base
 
-          translate :first_name
+          self.translation_data_field = :translation_json
 
-          def translation_data
-            { en: { first_name: 'Jon', last_name: 'Snow' } }
+          def translation_json
+            {
+              en: { first_name: 'Jon', last_name: 'Snow' },
+              fr: { first_name: 'Jean', last_name: 'Neige' }
+            }
           end
         end
 
-        @user = @user_class.new('joao', 'neve')
+        LostInTranslation.define_translation_methods(@user_class, :first_name)
+
+        @user = @user_class.new('Joao', 'Neve')
       end
 
-      it "must return a translation" do
-        expect(@user.translate(:first_name, :en)).to eq 'Jon'
+      it "LostInTranslation.translate must return a translation" do
+        expect(LostInTranslation.translate(@user, :first_name, :en)).to eq 'Jon'
+      end
+
+      it "calling a field not translated, must return the original data" do
+        I18n.with_locale(:en) do
+          expect(@user.last_name).to eq 'Neve'
+        end
       end
 
       context "and the translation data doesn't contain results" do
-        it "must return the original data" do
-          expect(@user.translate(:first_name, :fr)).to eq 'joao'
+        it "LostInTranslation.translate must return nil" do
+          expect(LostInTranslation.translate(@user, :first_name, :de)).to be_nil
         end
       end
     end
 
-    context "when a particular field is not translated" do
+    context "when it DOENS't point to a real method" do
       before do
         @user_class = Struct.new(:first_name, :last_name) do
-          include LostInTranslation
+          include LostInTranslation::Base
 
-          translate :first_name
-
-          def translation_data
-            { en: { first_name: 'Jon', last_name: 'Snow' } }
-          end
+          self.translation_data_field = :translation_json
         end
 
-        @user = @user_class.new('joao', 'neve')
+        LostInTranslation.define_translation_methods(@user_class, :first_name)
+
+        @user = @user_class.new('Joao', 'Neve')
       end
 
-      it "MUST return a translation" do
-        expect(@user.translate(:last_name, :en)).to eq 'Snow'
+      it "LostInTranslation.translate must raise an error" do
+        expect { LostInTranslation.translate(@user, :first_name, :en) }.to raise_error(NotImplementedError)
       end
 
-      context "and the translation data doesn't contain results" do
-        it "must return the original data" do
-          expect(@user.translate(:first_name, :fr)).to eq 'joao'
+      it "calling a field not translated, must return the original data" do
+        I18n.with_locale(:en) do
+          expect(@user.last_name).to eq 'Neve'
         end
       end
     end

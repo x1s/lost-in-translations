@@ -1,8 +1,34 @@
 require 'spec_helper'
 
-describe LostInTranslation::Config do
+describe LostInTranslation do
 
-  describe "#translation_data_field" do
+  describe "#included" do
+    context "when the object inherits from ActiveRecord" do
+      before do
+        @user_class = Class.new(ActiveRecord::Base) do
+          self.table_name = 'users'
+
+          include LostInTranslation
+        end
+      end
+
+      it "LostInTranslation::ActiveRecord must be included" do
+        expect(@user_class.ancestors.include?(LostInTranslation::ActiveRecord)).to be true
+      end
+    end
+
+    context "when the object DOES NOT inherit from ActiveRecord" do
+      before do
+        @user_class = Class.new { include LostInTranslation }
+      end
+
+      it "LostInTranslation::Ruby must be included" do
+        expect(@user_class.ancestors.include?(LostInTranslation::Ruby)).to be true
+      end
+    end
+  end
+
+  describe "#config.translation_data_field" do
 
     context "when setting the 'translation_data_field' to a known method" do
       before do
@@ -56,7 +82,7 @@ describe LostInTranslation::Config do
 
   end
 
-  describe "#translator" do
+  describe "#config.translator" do
 
     context "changing the source of the translation_data" do
       before do

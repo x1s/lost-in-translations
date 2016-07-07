@@ -1,0 +1,15 @@
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'spec/**/*'
+    - 'Gemfile*'
+    - '*.gemspec'
+
+Documentation:
+  Enabled: false

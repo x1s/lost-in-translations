@@ -16,12 +16,12 @@ class User < Struct.new(:title, :first_name, :last_name)
   end
 end
 ```
-Class method **.translate** will redefine **#title** and **#first_name** instance methods in order to return the values that match the **I18n.locale** and the attribute name from the Hash returned by **#translation_data**, otherwise calls the original redefined method.
+Class method **.translate** will redefine **#title** and **#first_name** instance methods in order to return the values that match the **I18n.locale** and the **attribute name** from the Hash returned by **#translation_data**, otherwise calls the original redefined method.
 
 ```ruby
 @user = User.new('Cavaleiro', 'Joao', 'Neve')
 
-I18n.default_locale = :fr
+I18n.locale = :fr
 
 @user.first_name # returns 'Jean'
 @user.last_name # returns 'Neve'
@@ -40,8 +40,15 @@ I18n.with_locale(:de) do
 end
 ```
 
+Instance method **#translate** is also available:
+```ruby
+@user.translate(:first_name, :fr) # returns 'Jean'
+@user.translate(:first_name, :en) # returns 'Jon'
+@user.translate(:first_name, :de) # returns 'Joao'
+```
+
 ## 2. Ideal usage
-Your ActiveRecord Model as a json attribute called **translation_data**.
+If your ActiveRecord Model has a json attribute called **translation_data**.
 ```ruby
 class CreateUsers < ActiveRecord::Migration
   def up
@@ -65,6 +72,7 @@ class CreateUsers < ActiveRecord::Migration
 end
 ```
 
+The usage becomes quite simple.
 ```ruby
 class User < ActiveRecord::Base
   include LostInTranslation
@@ -74,7 +82,7 @@ end
 
 @user = User.find(1)
 
-I18n.default_locale = :fr
+I18n.locale = :fr
 
 @user.first_name # returns 'Jean'
 @user.last_name # returns 'Neve'
@@ -83,7 +91,7 @@ I18n.default_locale = :fr
 
 ## 3. Configuration
 
-### 3.1 Your **translation_data** method (in all of your objects) is not called "translation_data"
+### 3.1 Your "translation_data" method (in all of your objects) is not called "translation_data"
 ```ruby
 LostInTranslation.configure do |config|
   config.translation_data_field = 'my_translation_data_field'
@@ -104,12 +112,12 @@ class User < ActiveRecord::Base
   end
 end
 
-I18n.default_locale = :fr
+I18n.locale = :fr
 
 User.find(1).first_name # returns 'Jean'
 ```
 
-### 3.2 Your **translation_data** method (in a particular object) is not called "translation_data"
+### 3.2 Your "translation_data" method (in a particular object) is not called "translation_data"
 ```ruby
 class User < ActiveRecord::Base
   include LostInTranslation
@@ -126,7 +134,7 @@ class User < ActiveRecord::Base
   end
 end
 
-I18n.default_locale = :fr
+I18n.locale = :fr
 
 User.find(1).first_name # returns 'Jean'
 ```
@@ -155,7 +163,7 @@ class User < ActiveRecord::Base
   translate :first_name
 end
 
-I18n.default_locale = :fr
+I18n.locale = :fr
 
 User.find(1).first_name # returns 'Jean' from redis or yaml file
 ```
@@ -172,7 +180,20 @@ class User < ActiveRecord::Base
   end
 end
 
-I18n.default_locale = :fr
+I18n.locale = :fr
 
 User.find(1).first_name # returns 'Jean' from redis or yaml file
+```
+
+## 4 Instalation
+
+Add your application's Gemfile:
+```
+gem 'lost_in_translation'
+```
+
+And then execute:
+
+```
+$> bundle install
 ```

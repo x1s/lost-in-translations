@@ -2,20 +2,22 @@ module LostInTranslation
   class Translator
 
     def self.translate(object, field, locale)
-      (translations_for(object, locale) || {})[field.to_sym]
+      translations = translations_for(object, locale) || {}
+
+      translations[field.to_sym] || translations[field.to_s]
     end
 
-    protected ######################### PROTECTED ##############################
-
     def self.translations_for(object, locale)
-      translation_data(object)[locale.to_sym]
+      translations = translation_data(object) || {}
+
+      translations[locale.to_sym] || translations[locale.to_s]
     end
 
     def self.translation_data(object)
       translation_data_field = object.class.translation_data_field
 
       unless object.respond_to?(translation_data_field)
-        fail \
+        raise \
           NotImplementedError,
           "#{object.class.name} does not respond to .#{translation_data_field}"
       end
