@@ -11,7 +11,7 @@ end
 
 $: << File.expand_path('../', File.dirname(__FILE__))
 
-require 'pry-byebug'
+require 'pry'
 require 'active_record'
 require 'lost_in_translations'
 

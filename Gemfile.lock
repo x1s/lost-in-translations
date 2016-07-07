@@ -23,7 +23,6 @@ GEM
     arel (6.0.3)
     ast (2.2.0)
     builder (3.2.2)
-    byebug (8.2.5)
     codeclimate-test-reporter (0.4.8)
       simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.1)
@@ -40,9 +39,6 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    pry-byebug (3.3.0)
-      byebug (~> 8.0)
-      pry (~> 0.10)
     rainbow (2.1.0)
     rake (11.2.2)
     rspec (3.4.0)
@@ -82,10 +78,9 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (= 4.2.6)
-  byebug (= 8.2.5)
   codeclimate-test-reporter (= 0.4.8)
   lost_in_translations!
-  pry-byebug (= 3.3.0)
+  pry (= 0.10.3)
   rake (= 11.2.2)
   rspec (= 3.4.0)
   rubocop (= 0.37.2)

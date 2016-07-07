@@ -19,13 +19,12 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
+  gem.add_development_dependency 'pry', '0.10.3'
   gem.add_development_dependency 'rake', '11.2.2'
   gem.add_development_dependency 'rspec', '3.4.0'
-  gem.add_development_dependency 'byebug', '8.2.5'
   gem.add_development_dependency 'sqlite3', '1.3.11'
   gem.add_development_dependency 'rubocop', '0.37.2'
   gem.add_development_dependency 'simplecov', '0.11.2'
-  gem.add_development_dependency 'pry-byebug', '3.3.0'
   gem.add_development_dependency 'activerecord', '4.2.6'
   gem.add_development_dependency 'codeclimate-test-reporter', '0.4.8'
 
