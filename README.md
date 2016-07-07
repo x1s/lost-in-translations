@@ -60,7 +60,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :title
       t.string :first_name
       t.string :last_name
-      t.json :translation_data
+      t.jsonb :translation_data
       t.timestamps
     end
 
