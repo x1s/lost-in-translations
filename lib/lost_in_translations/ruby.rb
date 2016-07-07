@@ -1,4 +1,4 @@
-module LostInTranslation
+module LostInTranslations
   module Ruby
 
     module ClassMethods
@@ -8,7 +8,7 @@ module LostInTranslation
           alias_method Ruby.original_field_name(field), field.to_sym
         end
 
-        LostInTranslation.define_translation_methods(self, *fields)
+        LostInTranslations.define_translation_methods(self, *fields)
       end
 
     end
@@ -19,7 +19,7 @@ module LostInTranslation
     end
 
     def translate(field, locale = I18n.locale)
-      LostInTranslation.translate(self, field, locale) ||
+      LostInTranslations.translate(self, field, locale) ||
         Ruby.call_original_field(self, field)
     end
 

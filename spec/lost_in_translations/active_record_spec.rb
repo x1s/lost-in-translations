@@ -1,13 +1,15 @@
 require 'spec_helper'
 
-describe LostInTranslation::Ruby do
+describe LostInTranslations::ActiveRecord do
 
   describe '.translate' do
 
     context "when translating a field" do
       before do
-        @user_class = Struct.new(:title, :first_name, :last_name) do
-          include LostInTranslation
+        @user_class = Class.new(ActiveRecord::Base) do
+          self.table_name = 'users'
+
+          include LostInTranslations::ActiveRecord
 
           translate :title, :first_name
 
@@ -19,16 +21,20 @@ describe LostInTranslation::Ruby do
           end
         end
 
-        @user = @user_class.new('Cavaleiro', 'Joao', 'Neve')
+        @user_class.create title: 'Cavaleiro', first_name: 'Joao', last_name: 'Neve'
+        @user = @user_class.first
       end
+      after { @user.destroy }
 
       it_behaves_like "a proper translator"
     end
 
     context "when a particular field is not translated" do
       before do
-        @user_class = Struct.new(:title, :first_name, :last_name) do
-          include LostInTranslation
+        @user_class = Class.new(ActiveRecord::Base) do
+          self.table_name = 'users'
+
+          include LostInTranslations::ActiveRecord
 
           translate :title, :first_name
 
@@ -40,7 +46,7 @@ describe LostInTranslation::Ruby do
           end
         end
 
-        @user = @user_class.new('Cavaleiro', 'Joao', 'Neve')
+        @user = @user_class.new title: 'Cavaleiro', first_name: 'Joao', last_name: 'Neve'
       end
 
       it "#field must return the original data" do

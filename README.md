@@ -1,14 +1,14 @@
-# Lost In Translation
+# Lost In Translations
 Super light Translation Ruby Gem agnostic to your framework and source data
 
-[![Code Climate](https://codeclimate.com/github/Streetbees/lost_in_translation/badges/gpa.svg)](https://codeclimate.com/github/Streetbees/lost_in_translation)
-[![Test Coverage](https://codeclimate.com/github/Streetbees/lost_in_translation/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost_in_translation/coverage)
-[![Build Status](https://travis-ci.org/Streetbees/lost_in_translation.svg?branch=master)](https://travis-ci.org/Streetbees/lost_in_translation)
+[![Code Climate](https://codeclimate.com/github/Streetbees/lost_in_translations/badges/gpa.svg)](https://codeclimate.com/github/Streetbees/lost_in_translations)
+[![Test Coverage](https://codeclimate.com/github/Streetbees/lost_in_translations/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost_in_translations/coverage)
+[![Build Status](https://travis-ci.org/Streetbees/lost_in_translations.svg?branch=master)](https://travis-ci.org/Streetbees/lost_in_translations)
 
 ## 1. Basic Usage
 ```ruby
 class User < Struct.new(:title, :first_name, :last_name)
-  include LostInTranslation
+  include LostInTranslations
 
   translate :title, :first_name
 
@@ -79,7 +79,7 @@ end
 The usage becomes quite simple.
 ```ruby
 class User < ActiveRecord::Base
-  include LostInTranslation
+  include LostInTranslations
 
   translate :title, :first_name
 end
@@ -97,14 +97,14 @@ I18n.locale = :fr
 
 ### 3.1 Your "translation_data" method (in all of your objects) is not called "translation_data"
 ```ruby
-LostInTranslation.configure do |config|
+LostInTranslations.configure do |config|
   config.translation_data_field = 'my_translation_data_field'
 end
 ```
 
 ```ruby
 class User < ActiveRecord::Base
-  include LostInTranslation
+  include LostInTranslations
 
   translate :first_name
 
@@ -124,7 +124,7 @@ User.find(1).first_name # returns 'Jean'
 ### 3.2 Your "translation_data" method (in a particular object) is not called "translation_data"
 ```ruby
 class User < ActiveRecord::Base
-  include LostInTranslation
+  include LostInTranslations
 
   translate :first_name
 
@@ -155,14 +155,14 @@ end
 ```
 
 ```ruby
-LostInTranslation.configure do |config|
+LostInTranslations.configure do |config|
   config.translator = MyTranslator
 end
 ```
 
 ```ruby
 class User < ActiveRecord::Base
-  include LostInTranslation
+  include LostInTranslations
 
   translate :first_name
 end
@@ -175,7 +175,7 @@ User.find(1).first_name # returns 'Jean' from redis or yaml file
 Don't forget that you can do the same at the object level
 ```ruby
 class User < ActiveRecord::Base
-  include LostInTranslation
+  include LostInTranslations
 
   translate :first_name
 
@@ -193,7 +193,7 @@ User.find(1).first_name # returns 'Jean' from redis or yaml file
 
 Add your application's Gemfile:
 ```
-gem 'lost_in_translation'
+gem 'lost_in_translations'
 ```
 
 And then execute:

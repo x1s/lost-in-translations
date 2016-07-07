@@ -1,10 +1,10 @@
-module LostInTranslation
+module LostInTranslations
   module ActiveRecord
 
     module ClassMethods
 
       def translate(*fields)
-        LostInTranslation.define_translation_methods(self, *fields)
+        LostInTranslations.define_translation_methods(self, *fields)
       end
 
     end
@@ -15,7 +15,7 @@ module LostInTranslation
     end
 
     def translate(field, locale = I18n.locale)
-      LostInTranslation.translate(self, field, locale) ||
+      LostInTranslations.translate(self, field, locale) ||
         ActiveRecord.call_original_field(self, field)
     end
 

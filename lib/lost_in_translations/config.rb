@@ -1,4 +1,4 @@
-module LostInTranslation
+module LostInTranslations
 
   Config = Struct.new(:translation_data_field, :translator)
 

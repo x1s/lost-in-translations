@@ -13,7 +13,7 @@ $: << File.expand_path('../', File.dirname(__FILE__))
 
 require 'pry-byebug'
 require 'active_record'
-require 'lost_in_translation'
+require 'lost_in_translations'
 
 I18n.available_locales = [:en, :pt, :fr, :de]
 I18n.default_locale = :pt

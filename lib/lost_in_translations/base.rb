@@ -1,4 +1,4 @@
-module LostInTranslation
+module LostInTranslations
   module Base
 
     def self.included(base_class)
@@ -11,7 +11,7 @@ module LostInTranslation
 
       def translation_data_field
         @translation_data_field ||
-          LostInTranslation.config.translation_data_field
+          LostInTranslations.config.translation_data_field
       end
 
     end

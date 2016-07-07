@@ -1,4 +1,4 @@
-module LostInTranslation
+module LostInTranslations
   class Translator
 
     def self.translate(object, field, locale)

@@ -1,16 +1,16 @@
 require 'i18n'
-require 'lost_in_translation/base'
-require 'lost_in_translation/ruby'
-require 'lost_in_translation/config'
-require 'lost_in_translation/translator'
-require 'lost_in_translation/active_record'
+require 'lost_in_translations/base'
+require 'lost_in_translations/ruby'
+require 'lost_in_translations/config'
+require 'lost_in_translations/translator'
+require 'lost_in_translations/active_record'
 
-module LostInTranslation
+module LostInTranslations
 
   def self.included(base_class)
     if defined?(::ActiveRecord::Base) &&
        base_class.ancestors.include?(::ActiveRecord::Base)
-      base_class.include LostInTranslation::ActiveRecord
+      base_class.include LostInTranslations::ActiveRecord
     else
       base_class.include Ruby
     end
