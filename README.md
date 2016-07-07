@@ -3,6 +3,7 @@ Super light Translation Ruby Gem agnostic to your framework and source data
 
 [![Code Climate](https://codeclimate.com/github/Streetbees/lost_in_translation/badges/gpa.svg)](https://codeclimate.com/github/Streetbees/lost_in_translation)
 [![Test Coverage](https://codeclimate.com/github/Streetbees/lost_in_translation/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost_in_translation/coverage)
+[![Build Status](https://travis-ci.org/Streetbees/lost_in_translation.svg?branch=master)](https://travis-ci.org/Streetbees/lost_in_translation)
 
 ## 1. Basic Usage
 ```ruby
