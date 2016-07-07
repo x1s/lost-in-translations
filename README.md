@@ -5,7 +5,7 @@ Super light Translation Ruby Gem agnostic to your framework and source data
 [![Test Coverage](https://codeclimate.com/github/Streetbees/lost_in_translations/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost_in_translations/coverage)
 [![Build Status](https://travis-ci.org/Streetbees/lost_in_translations.svg?branch=master)](https://travis-ci.org/Streetbees/lost_in_translations)
 
-## 1. Basic Usage
+## 1) Basic Usage
 ```ruby
 class User < Struct.new(:title, :first_name, :last_name)
   include LostInTranslations
@@ -51,7 +51,7 @@ Instance method **#translate** is also available:
 @user.translate(:first_name, :de) # returns 'Joao'
 ```
 
-## 2. Ideal usage
+## 2) Ideal usage
 If your ActiveRecord Model has a json attribute called **translation_data**.
 ```ruby
 class CreateUsers < ActiveRecord::Migration
@@ -93,9 +93,9 @@ I18n.locale = :fr
 @user.title # returns 'Cavaleiro'
 ```
 
-## 3. Configuration
+## 3) Configuration
 
-### 3.1 Your "translation_data" method (in all of your objects) is not called "translation_data"
+### 3.1) Your "translation_data" method (in all of your objects) is not called "translation_data"
 ```ruby
 LostInTranslations.configure do |config|
   config.translation_data_field = 'my_translation_data_field'
@@ -121,7 +121,7 @@ I18n.locale = :fr
 User.find(1).first_name # returns 'Jean'
 ```
 
-### 3.2 Your "translation_data" method (in a particular object) is not called "translation_data"
+### 3.2) Your "translation_data" method (in a particular object) is not called "translation_data"
 ```ruby
 class User < ActiveRecord::Base
   include LostInTranslations
@@ -143,7 +143,7 @@ I18n.locale = :fr
 User.find(1).first_name # returns 'Jean'
 ```
 
-### 3.3 Custom translation mechanism
+### 3.3) Custom translation mechanism
 ```ruby
 class MyTranslator
   def self.translate(object, field, locale)
@@ -189,7 +189,7 @@ I18n.locale = :fr
 User.find(1).first_name # returns 'Jean' from redis or yaml file
 ```
 
-## 4 Instalation
+## 4) Instalation
 
 Add your application's Gemfile:
 ```
