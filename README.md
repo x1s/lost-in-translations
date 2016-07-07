@@ -1,6 +1,9 @@
 # Lost In Translation
 Super light Translation Ruby Gem agnostic to your framework and source data
 
+[![Code Climate](https://codeclimate.com/github/Streetbees/lost_in_translation/badges/gpa.svg)](https://codeclimate.com/github/Streetbees/lost_in_translation)
+[![Test Coverage](https://codeclimate.com/github/Streetbees/lost_in_translation/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost_in_translation/coverage)
+
 ## 1. Basic Usage
 ```ruby
 class User < Struct.new(:title, :first_name, :last_name)

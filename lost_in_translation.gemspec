@@ -26,6 +26,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'simplecov', '0.11.2'
   gem.add_development_dependency 'pry-byebug', '3.3.0'
   gem.add_development_dependency 'activerecord', '4.2.6'
+  gem.add_development_dependency 'codeclimate-test-reporter', '0.4.8'
 
   gem.add_dependency 'i18n', '>= 0.7'
 end
