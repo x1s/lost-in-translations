@@ -180,10 +180,8 @@ User.find(1).first_name # returns 'Jean'
 ### 3.3) Custom translation mechanism
 ```ruby
 class MyTranslator < Translator::Base
-  def self.translate(object, field, locale)
-    translations = #get_data_from_redis_or_yaml_file(object)
-
-    (translations[locale] || {})[field]
+  def self.translation_data(object)
+    # get_data_from_redis_or_yaml_file(object)
   end
 end
 ```

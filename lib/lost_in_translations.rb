@@ -28,6 +28,10 @@ module LostInTranslations
     config.translator.assign_translation(*args)
   end
 
+  def self.translation_data(object)
+    config.translator.translation_data(object)
+  end
+
   def self.define_translation_methods(object, *fields)
     fields.each do |field|
       define_dynamic_translation_method(object, field)

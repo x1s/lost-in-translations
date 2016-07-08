@@ -74,9 +74,28 @@ describe LostInTranslations do
     end
   end
 
-  describe "#config.translation_data_field" do
+  describe "#translation_data" do
 
-    context "when setting the 'translation_data_field' to a known method" do
+    context "when the object.translation_data is nil" do
+      before do
+        @user_class = Struct.new(:first_name, :last_name) do
+          include LostInTranslations
+
+          translate :first_name
+
+          attr_accessor :translation_data
+        end
+
+        @user = @user_class.new('joao', 'neve')
+      end
+
+      it "should return an empty Hash" do
+        expect(LostInTranslations.translation_data(@user)).to eq({})
+        expect(@user.translation_data).to eq({})
+      end
+    end
+
+    context "when setting the #config.translation_data_field to a known method" do
       before do
         LostInTranslations.configure do |config|
           config.translation_data_field = 'translation_json'
@@ -96,14 +115,12 @@ describe LostInTranslations do
       end
       after { LostInTranslations.config.translation_data_field = 'translation_data' }
 
-      it "calling a translated field must return a translation" do
-        I18n.with_locale(:en) do
-          expect(@user.first_name).to eq 'Jon'
-        end
+      it "should return the known method results" do
+        expect(LostInTranslations.translation_data(@user)).to eq({ en: { first_name: 'Jon', last_name: 'Snow' } })
       end
     end
 
-    context "when setting the 'translation_data_field' to an unknown method" do
+    context "when setting the #config.translation_data_field to an unknown method" do
       before do
         LostInTranslations.configure do |config|
           config.translation_data_field = 'translation_json'
@@ -119,18 +136,12 @@ describe LostInTranslations do
       end
       after { LostInTranslations.config.translation_data_field = 'translation_data' }
 
-      it "calling a translated field, must raise an error" do
-        I18n.with_locale(:en) do
-          expect { @user.first_name }.to raise_error(NotImplementedError)
-        end
+      it "should raise an error" do
+        expect { LostInTranslations.translation_data(@user) }.to raise_error(NotImplementedError)
       end
     end
 
-  end
-
-  describe "#config.translator" do
-
-    context "changing the source of the translation_data" do
+    context "when changing the #config.translator" do
       before do
         LostInTranslations.configure do |config|
           config.translator = Class.new(LostInTranslations::Translator::Base) do
@@ -150,10 +161,8 @@ describe LostInTranslations do
       end
       after { LostInTranslations.config.translator = LostInTranslations::Translator::Base }
 
-      it "calling a translated field must return a translation" do
-        I18n.with_locale(:en) do
-          expect(@user.first_name).to eq 'Jon'
-        end
+      it "should return the known method results" do
+        expect(LostInTranslations.translation_data(@user)).to eq({ en: { first_name: 'Jon', last_name: 'Snow' } })
       end
     end
 

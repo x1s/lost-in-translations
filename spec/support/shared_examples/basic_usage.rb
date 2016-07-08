@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 shared_examples_for "a basic usage" do
-  it "should behave like the readme says" do
+  it "should behave like the readme says it does" do
     I18n.default_locale = :pt
     I18n.locale = :fr
 
