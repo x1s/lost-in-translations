@@ -31,8 +31,7 @@ module LostInTranslations
   def self.define_translation_methods(object, *fields)
     fields.each do |field|
       define_dynamic_translation_method(object, field)
-      define_getter_translation_method(object, field)
-      define_writer_translation_method(object, field)
+      define_particular_translation_methods(object, field)
     end
   end
 
@@ -44,19 +43,13 @@ module LostInTranslations
     RUBY
   end
 
-  def self.define_getter_translation_method(object, method_name)
+  def self.define_particular_translation_methods(object, method_name)
     I18n.available_locales.each do |locale|
       object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{locale}_#{method_name}
           translate(:#{method_name}, :#{locale})
         end
-      RUBY
-    end
-  end
 
-  def self.define_writer_translation_method(object, method_name)
-    I18n.available_locales.each do |locale|
-      object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{locale}_#{method_name}=(value)
           assign_translation(:#{method_name}, value, :#{locale})
         end

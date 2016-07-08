@@ -14,27 +14,13 @@ module LostInTranslations
     end
 
     def self.included(base_class)
-      base_class.send(:include, Base)
-      base_class.extend ClassMethods
-    end
-
-    include Base
-
-    def translate(field, locale = I18n.locale)
-      translation = LostInTranslations.translate(self, field, locale)
-
-      if translation.nil? && locale.to_sym == I18n.default_locale.to_sym
-        translation = Ruby.call_original_field(self, field)
+      base_class.class_eval do
+        include Base
+        extend ClassMethods
       end
-
-      translation
     end
 
-    def assign_translation(field, value, locale = I18n.locale)
-      LostInTranslations.assign_translation(self, field, value, locale)
-    end
-
-    def self.call_original_field(object, field)
+    def call_original_field(object, field)
       method_name = Ruby.original_field_name(field)
 
       return object.send(field) unless object.respond_to?(method_name)
