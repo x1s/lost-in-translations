@@ -133,7 +133,7 @@ describe LostInTranslations do
     context "changing the source of the translation_data" do
       before do
         LostInTranslations.configure do |config|
-          config.translator = Class.new(LostInTranslations::Translator) do
+          config.translator = Class.new(LostInTranslations::Translator::Base) do
             def self.translation_data(object)
               { en: { first_name: 'Jon', last_name: 'Snow' } }
             end
@@ -148,7 +148,7 @@ describe LostInTranslations do
 
         @user = @user_class.new('joao', 'neve')
       end
-      after { LostInTranslations.config.translator = LostInTranslations::Translator }
+      after { LostInTranslations.config.translator = LostInTranslations::Translator::Base }
 
       it "calling a translated field must return a translation" do
         I18n.with_locale(:en) do

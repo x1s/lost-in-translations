@@ -2,8 +2,8 @@ require 'i18n'
 require 'lost_in_translations/base'
 require 'lost_in_translations/ruby'
 require 'lost_in_translations/config'
-require 'lost_in_translations/translator'
 require 'lost_in_translations/active_record'
+require 'lost_in_translations/translator/base'
 
 module LostInTranslations
 
@@ -17,17 +17,22 @@ module LostInTranslations
   end
 
   def self.config
-    @config ||= Config.new('translation_data', Translator)
+    @config ||= Config.new('translation_data', Translator::Base)
   end
 
   def self.translate(*args)
     config.translator.translate(*args)
   end
 
+  def self.assign_translation(*args)
+    config.translator.assign_translation(*args)
+  end
+
   def self.define_translation_methods(object, *fields)
     fields.each do |field|
       define_dynamic_translation_method(object, field)
-      define_particular_translation_method(object, field)
+      define_getter_translation_method(object, field)
+      define_writer_translation_method(object, field)
     end
   end
 
@@ -39,11 +44,21 @@ module LostInTranslations
     RUBY
   end
 
-  def self.define_particular_translation_method(object, method_name)
+  def self.define_getter_translation_method(object, method_name)
     I18n.available_locales.each do |locale|
       object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def #{locale}_#{method_name}
           translate(:#{method_name}, :#{locale})
+        end
+      RUBY
+    end
+  end
+
+  def self.define_writer_translation_method(object, method_name)
+    I18n.available_locales.each do |locale|
+      object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def #{locale}_#{method_name}=(value)
+          assign_translation(:#{method_name}, value, :#{locale})
         end
       RUBY
     end

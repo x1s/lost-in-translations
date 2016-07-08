@@ -12,7 +12,7 @@ describe LostInTranslations::Base do
           self.translation_data_field = :translation_json
 
           def translation_json
-            {
+            @translation_json ||= {
               en: { first_name: 'Jon', last_name: 'Snow' },
               fr: { first_name: 'Jean', last_name: 'Neige' }
             }

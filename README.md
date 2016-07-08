@@ -1,9 +1,9 @@
 # Lost In Translations
 Super light Translation Ruby Gem agnostic to your framework and source data
 
-[![Code Climate](https://codeclimate.com/github/Streetbees/lost_in_translations/badges/gpa.svg)](https://codeclimate.com/github/Streetbees/lost_in_translations)
-[![Test Coverage](https://codeclimate.com/github/Streetbees/lost_in_translations/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost_in_translations/coverage)
-[![Build Status](https://travis-ci.org/Streetbees/lost_in_translations.svg?branch=master)](https://travis-ci.org/Streetbees/lost_in_translations)
+[![Code Climate](https://codeclimate.com/github/Streetbees/lost-in-translations/badges/gpa.svg)](https://codeclimate.com/github/Streetbees/lost-in-translations)
+[![Test Coverage](https://codeclimate.com/github/Streetbees/lost-in-translations/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost-in-translations/coverage)
+[![Build Status](https://travis-ci.org/Streetbees/lost-in-translations.svg?branch=master)](https://travis-ci.org/Streetbees/lost-in-translations)
 
 ## 1) Basic Usage
 ```ruby
@@ -13,50 +13,76 @@ class User < Struct.new(:title, :first_name, :last_name)
   translate :title, :first_name
 
   def translation_data
-    {
+    @translation_data ||= {
       en: { first_name: 'Jon', last_name: 'Snow' },
       fr: { first_name: 'Jean', last_name: 'Neige' }
     }
   end
 end
 ```
-Class method ```.translate``` will redefine ```#title``` and ```#first_name``` instance methods in order to return the values that match the ```I18n.locale``` and the ```attribute name``` from the Hash returned by ```#translation_data```, otherwise calls the original redefined method.
+Class method ```.translate``` will redefine ```#title``` and ```#first_name``` instance methods in order to return the values that match the ```I18n.locale``` and the ```attribute name``` from the Hash returned by ```#translation_data```.
 
 ```ruby
 @user = User.new('Cavaleiro', 'Joao', 'Neve')
 
+I18n.default_locale = :pt
 I18n.locale = :fr
 
 @user.first_name # returns 'Jean'
 @user.last_name # returns 'Neve'
-@user.title # returns 'Cavaleiro'
+@user.title # returns nil
 
 I18n.with_locale(:en) do
   @user.first_name # returns 'Jon'
+  @user.last_name # returns 'Neve'
+  @user.title # returns nil
+end
+
+I18n.with_locale(:pt) do
+  # there is no translation present but since locale
+  # matches the default_locale, the original value is returned
+
+  @user.first_name # returns 'Joao'
   @user.last_name # returns 'Neve'
   @user.title # returns 'Cavaleiro'
 end
 
 I18n.with_locale(:de) do
-  @user.first_name # returns 'Joao'
+  @user.first_name # returns nil
   @user.last_name # returns 'Neve'
-  @user.title # returns 'Cavaleiro'
+  @user.title # returns nil
 end
 ```
 
-Instance method ```#translate``` is also available:
+The following instance methods are also available:
+#### 1.1) ```#translate```
 ```ruby
 @user.translate(:first_name, :fr) # returns 'Jean'
 @user.translate(:first_name, :en) # returns 'Jon'
-@user.translate(:first_name, :de) # returns 'Joao'
+@user.translate(:first_name, :pt) # returns 'Joao'
+@user.translate(:first_name, :de) # returns nil
 ```
 
-And ```#<I18n.available_locales>_<translated_field>``` is also available:
+#### 1.2) ```#<I18n.available_locales>_<translated_field>```
 ```ruby
 @user.fr_first_name # returns 'Jean'
 @user.en_first_name # returns 'Jon'
 @user.pt_first_name # returns 'Joao'
-@user.de_first_name # returns 'Joao'
+@user.de_first_name # returns nil
+```
+
+#### 1.3) ```#<I18n.available_locales>_<translated_field>=```
+```ruby
+@user.pt_first_name = 'João'
+@user.de_first_name = 'Hans'
+
+@user.translation_data  # will contain
+                        # {
+                        #   en: { first_name: 'Jon', last_name: 'Snow' },
+                        #   pt: { first_name: 'João' },
+                        #   de: { first_name: 'Hans' },
+                        #   fr: { first_name: 'Jean', last_name: 'Neige' }
+                        # }
 ```
 
 ## 2) Ideal usage
@@ -117,7 +143,7 @@ class User < ActiveRecord::Base
   translate :first_name
 
   def my_translation_data_field
-    {
+    @my_translation_data_field ||= {
       en: { first_name: 'Jon', last_name: 'Snow' },
       fr: { first_name: 'Jean', last_name: 'Neige' }
     }
@@ -139,7 +165,7 @@ class User < ActiveRecord::Base
   self.translation_data_field = :my_translation_data_field
 
   def my_translation_data_field
-    {
+    @my_translation_data_field ||= {
       en: { first_name: 'Jon', last_name: 'Snow' },
       fr: { first_name: 'Jean', last_name: 'Neige' }
     }
@@ -153,7 +179,7 @@ User.find(1).first_name # returns 'Jean'
 
 ### 3.3) Custom translation mechanism
 ```ruby
-class MyTranslator
+class MyTranslator < Translator::Base
   def self.translate(object, field, locale)
     translations = #get_data_from_redis_or_yaml_file(object)
 
