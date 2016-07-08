@@ -124,7 +124,7 @@ I18n.locale = :fr
 
 @user.first_name # returns 'Jean'
 @user.last_name # returns 'Neve'
-@user.title # returns 'Cavaleiro'
+@user.title # returns nil
 ```
 
 ## 3) Configuration
