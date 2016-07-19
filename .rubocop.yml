@@ -4,6 +4,9 @@ Style/EmptyLinesAroundClassBody:
 Style/EmptyLinesAroundModuleBody:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 AllCops:
   DisplayCopNames: true
   Exclude:
