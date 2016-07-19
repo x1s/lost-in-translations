@@ -28,6 +28,14 @@ module LostInTranslations
           LostInTranslations.config.translation_data_field
       end
 
+      def translation_fields
+        @translation_fields ||= []
+      end
+
+      def translate(*fields)
+        translation_fields.push(*fields)
+      end
+
     end
 
   end

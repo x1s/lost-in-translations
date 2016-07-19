@@ -1,19 +1,16 @@
 module LostInTranslations
   module ActiveRecord
 
-    module ClassMethods
-
-      def translate(*fields)
-        LostInTranslations.define_translation_methods(self, *fields)
-      end
-
+    def self.included(base_class)
+      base_class.send(:include, Base)
     end
 
-    def self.included(base_class)
-      base_class.class_eval do
-        include Base
-        extend ClassMethods
-      end
+    def initialize(*args, &block)
+      super(*args, &block)
+
+      LostInTranslations.define_translation_methods \
+        self,
+        *self.class.translation_fields
     end
 
     def call_original_field(object, field)
