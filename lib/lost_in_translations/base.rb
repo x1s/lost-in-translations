@@ -33,7 +33,7 @@ module LostInTranslations
       end
 
       def translate(*fields)
-        translation_fields.push(*fields)
+        translation_fields.concat(fields)
       end
 
     end

@@ -11,7 +11,7 @@ module LostInTranslations
       fields = self.class.translation_fields
 
       fields.each do |field|
-        self.class_eval do
+        class_eval do
           alias_method Ruby.original_field_name(field), field.to_sym
         end
       end
