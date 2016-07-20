@@ -133,7 +133,7 @@ LostInTranslations.reload # will run .define_translation_methods in every class 
 ```
 
 ```ruby
-I18n.available_locales == [:pt]
+I18n.available_locales = [:pt]
 
 class User < ActiveRecord::Base
   include LostInTranslations
@@ -141,15 +141,15 @@ class User < ActiveRecord::Base
   translate :first_name
 end
 
-User.new.respond_to?(:pt_first_name) == true
-User.new.respond_to?(:en_first_name) == false
+User.new.respond_to?(:pt_first_name) # true
+User.new.respond_to?(:en_first_name) # false
 
 I18n.available_locales.push(:en)
 
 LostInTranslations.reload
 
-User.new.respond_to?(:pt_first_name) == true
-User.new.respond_to?(:en_first_name) == true
+User.new.respond_to?(:pt_first_name) # true
+User.new.respond_to?(:en_first_name) # true
 ```
 
 ## 4) Configuration
