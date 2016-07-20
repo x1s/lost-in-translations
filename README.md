@@ -144,7 +144,7 @@ In Rails, create the file **config/initializers/lost_in_translations.rb** with:
 ```ruby
 LostInTranslations.reload
 ```
-Because Rails starts with a set of **I18n.available_locales** different from when it finished loading and **LostInTranslations** needs to know about those new locales.
+Because Rails starts with a set of **I18n.available_locales** different from when it finished loading and **LostInTranslations** needs to redefine new methods for those new locales in your classes.
 
 ## 4) F.A.Q.
 
