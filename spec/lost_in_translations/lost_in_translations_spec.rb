@@ -2,6 +2,67 @@ require 'spec_helper'
 
 describe LostInTranslations do
 
+  describe "#reload" do
+    context "when the available_locales do not include :es" do
+      before do
+        LostInTranslations.infected_classes.clear
+
+        @user_class1 = Struct.new(:first_name, :last_name) do
+          include LostInTranslations::Ruby
+
+          translate :first_name
+        end
+
+        @user_class2 = Class.new(ActiveRecord::Base) do
+          self.table_name = 'users'
+
+          include LostInTranslations::ActiveRecord
+
+          translate :last_name
+        end
+
+        @user1 = @user_class1.new('Joao', 'Neve')
+        @user2 = @user_class2.new(title: 'Cavaleiro', first_name: 'Joao', last_name: 'Neve')
+      end
+
+      it "#pt_first_name SHOULD be defined" do
+        expect(@user1.respond_to?(:pt_first_name)).to be true
+        expect(@user2.respond_to?(:pt_last_name)).to be true
+      end
+
+      it "#es_first_name should NOT be defined" do
+        expect(@user1.respond_to?(:es_first_name)).to be false
+        expect(@user1.respond_to?(:es_last_name)).to be false
+      end
+
+      context "when :es gets introduced" do
+        before { I18n.available_locales.push(:es) }
+        after { I18n.available_locales.pop }
+
+        context "and .reload as NOT ran" do
+          it "#es_first_name should NOT be defined" do
+            expect(@user1.respond_to?(:es_first_name)).to be false
+            expect(@user2.respond_to?(:es_last_name)).to be false
+          end
+        end
+
+        context "and .define_translation_methods AS ran" do
+          before { LostInTranslations.reload }
+
+          it "#pt_first_name SHOULD be defined" do
+            expect(@user1.respond_to?(:pt_first_name)).to be true
+            expect(@user2.respond_to?(:pt_last_name)).to be true
+          end
+
+          it "#es_first_name SHOULD be defined" do
+            expect(@user1.respond_to?(:es_first_name)).to be true
+            expect(@user2.respond_to?(:es_last_name)).to be true
+          end
+        end
+      end
+    end
+  end
+
   describe "#define_translation_methods" do
     context "when the passed methods do not exist" do
       before do

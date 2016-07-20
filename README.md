@@ -127,9 +127,34 @@ I18n.locale = :fr
 @user.title # returns nil
 ```
 
-## 3) Configuration
+## 3) I18n.available_locales as changed, how do I recreate the new translation methods?
+```ruby
+LostInTranslations.reload # will run .define_translation_methods in every class that has "include LostInTranslations"
+```
 
-### 3.1) Your "translation_data" method (in all of your objects) is not called "translation_data"
+```ruby
+I18n.available_locales == [:pt]
+
+class User < ActiveRecord::Base
+  include LostInTranslations
+
+  translate :first_name
+end
+
+User.new.respond_to?(:pt_first_name) == true
+User.new.respond_to?(:en_first_name) == false
+
+I18n.available_locales.push(:en)
+
+LostInTranslations.reload
+
+User.new.respond_to?(:pt_first_name) == true
+User.new.respond_to?(:en_first_name) == true
+```
+
+## 4) Configuration
+
+### 4.1) Your "translation_data" method (in all of your objects) is not called "translation_data"
 ```ruby
 LostInTranslations.configure do |config|
   config.translation_data_field = 'my_translation_data_field'
@@ -155,7 +180,7 @@ I18n.locale = :fr
 User.find(1).first_name # returns 'Jean'
 ```
 
-### 3.2) Your "translation_data" method (in a particular object) is not called "translation_data"
+### 4.2) Your "translation_data" method (in a particular object) is not called "translation_data"
 ```ruby
 class User < ActiveRecord::Base
   include LostInTranslations
@@ -177,7 +202,7 @@ I18n.locale = :fr
 User.find(1).first_name # returns 'Jean'
 ```
 
-### 3.3) Custom translation mechanism
+### 4.3) Custom translation mechanism
 ```ruby
 class MyTranslator < Translator::Base
   def self.translation_data(object)
@@ -221,7 +246,7 @@ I18n.locale = :fr
 User.find(1).first_name # returns 'Jean' from redis or yaml file
 ```
 
-## 4) Instalation
+## 5) Instalation
 
 Add your application's Gemfile:
 ```

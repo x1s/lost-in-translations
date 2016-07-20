@@ -1,22 +1,25 @@
 module LostInTranslations
   module Ruby
 
-    def self.included(base_class)
-      base_class.send(:include, Base)
-    end
+    module ClassMethods
 
-    def initialize(*args, &block)
-      super(*args, &block)
+      def define_translation_methods
+        translation_fields.each do |field|
+          next if instance_methods.include?(Ruby.original_field_name(field))
 
-      fields = self.class.translation_fields
-
-      fields.each do |field|
-        class_eval do
-          alias_method Ruby.original_field_name(field), field.to_sym
+          class_eval do
+            alias_method Ruby.original_field_name(field), field.to_sym
+          end
         end
+
+        LostInTranslations.define_translation_methods self, *translation_fields
       end
 
-      LostInTranslations.define_translation_methods(self, *fields)
+    end
+
+    def self.included(base_class)
+      base_class.send(:include, Base)
+      base_class.extend ClassMethods
     end
 
     def call_original_field(object, field)

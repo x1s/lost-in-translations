@@ -65,4 +65,12 @@ module LostInTranslations
     yield(config)
   end
 
+  def self.infected_classes
+    @infected_classes ||= []
+  end
+
+  def self.reload
+    infected_classes.each(&:define_translation_methods)
+  end
+
 end

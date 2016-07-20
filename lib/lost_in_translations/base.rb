@@ -2,6 +2,8 @@ module LostInTranslations
   module Base
 
     def self.included(base_class)
+      LostInTranslations.infected_classes.push(base_class)
+
       base_class.extend ClassMethods
     end
 
@@ -34,6 +36,8 @@ module LostInTranslations
 
       def translate(*fields)
         translation_fields.concat(fields)
+
+        define_translation_methods
       end
 
     end
