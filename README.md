@@ -127,128 +127,9 @@ I18n.locale = :fr
 @user.title # returns nil
 ```
 
-## 3) I18n.available_locales as changed, how do I recreate the new translation methods?
-```ruby
-LostInTranslations.reload # will run .define_translation_methods in every class that has "include LostInTranslations"
-```
+## 3) Instalation
 
-```ruby
-I18n.available_locales = [:pt]
-
-class User < ActiveRecord::Base
-  include LostInTranslations
-
-  translate :first_name
-end
-
-User.new.respond_to?(:pt_first_name) # true
-User.new.respond_to?(:en_first_name) # false
-
-I18n.available_locales.push(:en)
-
-LostInTranslations.reload
-
-User.new.respond_to?(:pt_first_name) # true
-User.new.respond_to?(:en_first_name) # true
-```
-
-## 4) Configuration
-
-### 4.1) Your "translation_data" method (in all of your objects) is not called "translation_data"
-```ruby
-LostInTranslations.configure do |config|
-  config.translation_data_field = 'my_translation_data_field'
-end
-```
-
-```ruby
-class User < ActiveRecord::Base
-  include LostInTranslations
-
-  translate :first_name
-
-  def my_translation_data_field
-    @my_translation_data_field ||= {
-      en: { first_name: 'Jon', last_name: 'Snow' },
-      fr: { first_name: 'Jean', last_name: 'Neige' }
-    }
-  end
-end
-
-I18n.locale = :fr
-
-User.find(1).first_name # returns 'Jean'
-```
-
-### 4.2) Your "translation_data" method (in a particular object) is not called "translation_data"
-```ruby
-class User < ActiveRecord::Base
-  include LostInTranslations
-
-  translate :first_name
-
-  self.translation_data_field = :my_translation_data_field
-
-  def my_translation_data_field
-    @my_translation_data_field ||= {
-      en: { first_name: 'Jon', last_name: 'Snow' },
-      fr: { first_name: 'Jean', last_name: 'Neige' }
-    }
-  end
-end
-
-I18n.locale = :fr
-
-User.find(1).first_name # returns 'Jean'
-```
-
-### 4.3) Custom translation mechanism
-```ruby
-class MyTranslator < Translator::Base
-  def self.translation_data(object)
-    # get_data_from_redis_or_yaml_file(object)
-  end
-end
-```
-
-```ruby
-LostInTranslations.configure do |config|
-  config.translator = MyTranslator
-end
-```
-
-```ruby
-class User < ActiveRecord::Base
-  include LostInTranslations
-
-  translate :first_name
-end
-
-I18n.locale = :fr
-
-User.find(1).first_name # returns 'Jean' from redis or yaml file
-```
-
-Don't forget that you can do the same at the object level
-```ruby
-class User < ActiveRecord::Base
-  include LostInTranslations
-
-  translate :first_name
-
-  def translation_data
-    # get_data_from_redis_or_yaml_file(self)
-  end
-end
-
-I18n.locale = :fr
-
-User.find(1).first_name # returns 'Jean' from redis or yaml file
-```
-
-## 5) Instalation
-
-Add your application's Gemfile:
+Add this to your Gemfile:
 ```
 gem 'lost_in_translations'
 ```
@@ -258,3 +139,16 @@ And then execute:
 ```
 $> bundle install
 ```
+
+In Rails, create the file **config/initializers/lost_in_translations.rb** with:
+```ruby
+LostInTranslations.reload
+```
+Because Rails starts with a set of **I18n.available_locales** different from when it finished loading and **LostInTranslations** needs to know about those new locales.
+
+## 4) F.A.Q.
+
+- [I18n.available_locales as changed, how do I recreate the new translation methods?](https://github.com/Streetbees/lost-in-translations/wiki/Redefining-translation-methods)
+- [Your "translation_data" method (in all of your objects) is not called "translation_data"](https://github.com/Streetbees/lost-in-translations/wiki/translation_data-configuration-version-1)
+- [Your "translation_data" method (in a particular object) is not called "translation_data"](https://github.com/Streetbees/lost-in-translations/wiki/translation_data-configuration-version-2)
+- [Custom translation mechanism](https://github.com/Streetbees/lost-in-translations/wiki/Custom-translation-mechanism)
