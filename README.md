@@ -4,6 +4,7 @@ Super light Translation Ruby Gem agnostic to your framework and source data
 [![Code Climate](https://codeclimate.com/github/Streetbees/lost-in-translations/badges/gpa.svg)](https://codeclimate.com/github/Streetbees/lost-in-translations)
 [![Test Coverage](https://codeclimate.com/github/Streetbees/lost-in-translations/badges/coverage.svg)](https://codeclimate.com/github/Streetbees/lost-in-translations/coverage)
 [![Build Status](https://travis-ci.org/Streetbees/lost-in-translations.svg?branch=master)](https://travis-ci.org/Streetbees/lost-in-translations)
+[![Gem Version](https://badge.fury.io/rb/lost_in_translations.svg)](https://badge.fury.io/rb/lost_in_translations)
 
 ## 1) Basic Usage
 ```ruby
