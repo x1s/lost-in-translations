@@ -1,6 +1,5 @@
 module LostInTranslations
   module Base
-
     def self.included(base_class)
       LostInTranslations.infected_classes.push(base_class)
 
@@ -22,7 +21,6 @@ module LostInTranslations
     end
 
     module ClassMethods
-
       attr_writer :translation_data_field
 
       def translation_data_field
@@ -39,8 +37,6 @@ module LostInTranslations
 
         define_translation_methods
       end
-
     end
-
   end
 end

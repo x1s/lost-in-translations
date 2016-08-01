@@ -1,7 +1,6 @@
 module LostInTranslations
   module Translator
     class Base
-
       def self.translate(object, field, locale)
         data = translation_data(object)
 
@@ -43,7 +42,6 @@ module LostInTranslations
 
         translation_data_field
       end
-
     end
   end
 end

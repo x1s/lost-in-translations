@@ -11,10 +11,11 @@ Gem::Specification.new do |gem|
   gem.authors = ['StreetBees Dev Team']
   gem.email = 'dev@streetbees.com'
   gem.summary = 'Ruby Translation Gem'
-  gem.description = 'Super light Translation Ruby Gem agnostic to your framework and source data'
+  gem.description = 'Super light Translation Ruby Gem agnostic' \
+                    ' to your framework and source data'
   gem.homepage = 'https://github.com/streetbees/lost-in-translations'
 
-  gem.files = `git ls-files`.split($/)
+  gem.files = Dir['README.md', 'lib/**/*']
   gem.executables = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']

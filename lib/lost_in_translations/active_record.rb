@@ -1,14 +1,5 @@
 module LostInTranslations
   module ActiveRecord
-
-    module ClassMethods
-
-      def define_translation_methods
-        LostInTranslations.define_translation_methods self, *translation_fields
-      end
-
-    end
-
     def self.included(base_class)
       base_class.send(:include, Base)
       base_class.extend ClassMethods
@@ -18,5 +9,10 @@ module LostInTranslations
       object.read_attribute(field)
     end
 
+    module ClassMethods
+      def define_translation_methods
+        LostInTranslations.define_translation_methods self, *translation_fields
+      end
+    end
   end
 end

@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 describe LostInTranslations do
-
-  describe "#reload" do
-    context "when the available_locales do not include :es" do
+  describe '#reload' do
+    context 'when the available_locales do not include :es' do
       before do
         LostInTranslations.infected_classes.clear
 
@@ -22,39 +21,42 @@ describe LostInTranslations do
         end
 
         @user1 = @user_class1.new('Joao', 'Neve')
-        @user2 = @user_class2.new(title: 'Cavaleiro', first_name: 'Joao', last_name: 'Neve')
+        @user2 = @user_class2.new \
+          title: 'Cavaleiro',
+          first_name: 'Joao',
+          last_name: 'Neve'
       end
 
-      it "#pt_first_name SHOULD be defined" do
+      it '#pt_first_name SHOULD be defined' do
         expect(@user1.respond_to?(:pt_first_name)).to be true
         expect(@user2.respond_to?(:pt_last_name)).to be true
       end
 
-      it "#es_first_name should NOT be defined" do
+      it '#es_first_name should NOT be defined' do
         expect(@user1.respond_to?(:es_first_name)).to be false
         expect(@user1.respond_to?(:es_last_name)).to be false
       end
 
-      context "when :es gets introduced" do
+      context 'when :es gets introduced' do
         before { I18n.available_locales.push(:es) }
         after { I18n.available_locales.pop }
 
-        context "and .reload as NOT ran" do
-          it "#es_first_name should NOT be defined" do
+        context 'and .reload as NOT ran' do
+          it '#es_first_name should NOT be defined' do
             expect(@user1.respond_to?(:es_first_name)).to be false
             expect(@user2.respond_to?(:es_last_name)).to be false
           end
         end
 
-        context "and .define_translation_methods AS ran" do
+        context 'and .define_translation_methods AS ran' do
           before { LostInTranslations.reload }
 
-          it "#pt_first_name SHOULD be defined" do
+          it '#pt_first_name SHOULD be defined' do
             expect(@user1.respond_to?(:pt_first_name)).to be true
             expect(@user2.respond_to?(:pt_last_name)).to be true
           end
 
-          it "#es_first_name SHOULD be defined" do
+          it '#es_first_name SHOULD be defined' do
             expect(@user1.respond_to?(:es_first_name)).to be true
             expect(@user2.respond_to?(:es_last_name)).to be true
           end
@@ -63,8 +65,8 @@ describe LostInTranslations do
     end
   end
 
-  describe "#define_translation_methods" do
-    context "when the passed methods do not exist" do
+  describe '#define_translation_methods' do
+    context 'when the passed methods do not exist' do
       before do
         @user_class = Struct.new(:first_name, :last_name) do
           include LostInTranslations
@@ -75,18 +77,18 @@ describe LostInTranslations do
         @user = @user_class.new('Joao', 'Neve')
       end
 
-      it "#unknown should be defined" do
+      it '#unknown should be defined' do
         expect(@user.respond_to?(:unknown)).to be true
       end
 
-      it "#<I18n.available_locales>_unknown should be defined" do
+      it '#<I18n.available_locales>_unknown should be defined' do
         I18n.available_locales.each do |locale|
           expect(@user.respond_to?("#{locale}_unknown")).to be true
         end
       end
     end
 
-    context "when the passed methods do exist" do
+    context 'when the passed methods do exist' do
       before do
         @user_class = Struct.new(:first_name, :last_name) do
           include LostInTranslations
@@ -97,11 +99,11 @@ describe LostInTranslations do
         @user = @user_class.new('Joao', 'Neve')
       end
 
-      it "#first_name should be defined" do
+      it '#first_name should be defined' do
         expect(@user.respond_to?(:first_name)).to be true
       end
 
-      it "#<I18n.available_locales>_first_name should be defined" do
+      it '#<I18n.available_locales>_first_name should be defined' do
         I18n.available_locales.each do |locale|
           expect(@user.respond_to?("#{locale}_first_name")).to be true
         end
@@ -109,8 +111,8 @@ describe LostInTranslations do
     end
   end
 
-  describe "#included" do
-    context "when the object inherits from ActiveRecord" do
+  describe '#included' do
+    context 'when the object inherits from ActiveRecord' do
       before do
         @user_class = Class.new(ActiveRecord::Base) do
           self.table_name = 'users'
@@ -119,25 +121,27 @@ describe LostInTranslations do
         end
       end
 
-      it "LostInTranslations::ActiveRecord must be included" do
-        expect(@user_class.ancestors.include?(LostInTranslations::ActiveRecord)).to be true
+      it 'LostInTranslations::ActiveRecord must be included' do
+        ancestors = @user_class.ancestors
+
+        expect(ancestors.include?(LostInTranslations::ActiveRecord)).to be true
       end
     end
 
-    context "when the object DOES NOT inherit from ActiveRecord" do
+    context 'when the object DOES NOT inherit from ActiveRecord' do
       before do
         @user_class = Class.new { include LostInTranslations }
       end
 
-      it "LostInTranslations::Ruby must be included" do
-        expect(@user_class.ancestors.include?(LostInTranslations::Ruby)).to be true
+      it 'LostInTranslations::Ruby must be included' do
+        expect(@user_class.ancestors.include?(LostInTranslations::Ruby)).to \
+          be true
       end
     end
   end
 
-  describe "#translation_data" do
-
-    context "when the object.translation_data is nil" do
+  describe '#translation_data' do
+    context 'when the object.translation_data is nil' do
       before do
         @user_class = Struct.new(:first_name, :last_name) do
           include LostInTranslations
@@ -150,13 +154,13 @@ describe LostInTranslations do
         @user = @user_class.new('joao', 'neve')
       end
 
-      it "should return an empty Hash" do
+      it 'should return an empty Hash' do
         expect(LostInTranslations.translation_data(@user)).to eq({})
         expect(@user.translation_data).to eq({})
       end
     end
 
-    context "when setting the #config.translation_data_field to a known method" do
+    context 'setting the #config.translation_data_field to a known method' do
       before do
         LostInTranslations.configure do |config|
           config.translation_data_field = 'translation_json'
@@ -174,14 +178,18 @@ describe LostInTranslations do
 
         @user = @user_class.new('joao', 'neve')
       end
-      after { LostInTranslations.config.translation_data_field = 'translation_data' }
+      after do
+        LostInTranslations.config.translation_data_field = 'translation_data'
+      end
 
-      it "should return the known method results" do
-        expect(LostInTranslations.translation_data(@user)).to eq({ en: { first_name: 'Jon', last_name: 'Snow' } })
+      it 'should return the known method results' do
+        expect(LostInTranslations.translation_data(@user)).to eq(
+          en: { first_name: 'Jon', last_name: 'Snow' }
+        )
       end
     end
 
-    context "when setting the #config.translation_data_field to an unknown method" do
+    context 'setting the #config.translation_data_field to an unknown method' do
       before do
         LostInTranslations.configure do |config|
           config.translation_data_field = 'translation_json'
@@ -195,18 +203,21 @@ describe LostInTranslations do
 
         @user = @user_class.new('joao', 'neve')
       end
-      after { LostInTranslations.config.translation_data_field = 'translation_data' }
+      after do
+        LostInTranslations.config.translation_data_field = 'translation_data'
+      end
 
-      it "should raise an error" do
-        expect { LostInTranslations.translation_data(@user) }.to raise_error(NotImplementedError)
+      it 'should raise an error' do
+        expect { LostInTranslations.translation_data(@user) }.to \
+          raise_error(NotImplementedError)
       end
     end
 
-    context "when changing the #config.translator" do
+    context 'when changing the #config.translator' do
       before do
         LostInTranslations.configure do |config|
           config.translator = Class.new(LostInTranslations::Translator::Base) do
-            def self.translation_data(object)
+            def self.translation_data(_)
               { en: { first_name: 'Jon', last_name: 'Snow' } }
             end
           end
@@ -220,13 +231,16 @@ describe LostInTranslations do
 
         @user = @user_class.new('joao', 'neve')
       end
-      after { LostInTranslations.config.translator = LostInTranslations::Translator::Base }
+      after do
+        LostInTranslations.config.translator =
+          LostInTranslations::Translator::Base
+      end
 
-      it "should return the known method results" do
-        expect(LostInTranslations.translation_data(@user)).to eq({ en: { first_name: 'Jon', last_name: 'Snow' } })
+      it 'should return the known method results' do
+        expect(LostInTranslations.translation_data(@user)).to eq(
+          en: { first_name: 'Jon', last_name: 'Snow' }
+        )
       end
     end
-
   end
-
 end

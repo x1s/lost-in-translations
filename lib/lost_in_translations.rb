@@ -6,7 +6,6 @@ require 'lost_in_translations/active_record'
 require 'lost_in_translations/translator/base'
 
 module LostInTranslations
-
   def self.included(base_class)
     if defined?(::ActiveRecord::Base) &&
        base_class.ancestors.include?(::ActiveRecord::Base)
@@ -72,5 +71,4 @@ module LostInTranslations
   def self.reload
     infected_classes.each(&:define_translation_methods)
   end
-
 end

@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe LostInTranslations::Ruby do
-
-  context "when building a resource" do
+  context 'when building a resource' do
     before do
       @user_class = Struct.new(:title, :first_name, :last_name) do
         include LostInTranslations::Ruby
@@ -20,7 +19,6 @@ describe LostInTranslations::Ruby do
       @user = @user_class.new('Cavaleiro', 'Joao', 'Neve')
     end
 
-    it_behaves_like "the readme example"
+    it_behaves_like 'the readme example'
   end
-
 end
