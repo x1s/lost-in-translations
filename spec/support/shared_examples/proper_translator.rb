@@ -1,6 +1,6 @@
 shared_examples_for 'a proper translator' do
   it '#field must return a translation' do
-    I18n.with_locale(:en) do
+    I18n.with_locale(:'en-GB') do
       expect(@user.first_name).to eq 'Jon'
     end
   end
@@ -15,7 +15,7 @@ shared_examples_for 'a proper translator' do
 
   context 'when the translation data does not contain the desired field' do
     it '#field must return nil' do
-      I18n.with_locale(:en) do
+      I18n.with_locale(:'en-GB') do
         expect(@user.title).to be_nil
       end
     end

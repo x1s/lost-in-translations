@@ -46,18 +46,24 @@ module LostInTranslations
     RUBY
   end
 
-  def self.define_particular_translation_methods(object, method_name)
+  def self.define_particular_translation_methods(object, attribute)
     I18n.available_locales.each do |locale|
-      object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def #{locale}_#{method_name}
-          translate(:#{method_name}, :#{locale})
-        end
+      method_name = "#{locale.to_s.downcase.tr('-', '_')}_#{attribute}"
 
-        def #{locale}_#{method_name}=(value)
-          assign_translation(:#{method_name}, value, :#{locale})
-        end
-      RUBY
+      define_translation_method(object, method_name, attribute, locale)
     end
+  end
+
+  def self.define_translation_method(object, method_name, attribute, locale)
+    object.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+      def #{method_name}
+        translate(:#{attribute}, :'#{locale}')
+      end
+
+      def #{method_name}=(value)
+        assign_translation(:#{attribute}, value, :'#{locale}')
+      end
+    RUBY
   end
 
   def self.configure

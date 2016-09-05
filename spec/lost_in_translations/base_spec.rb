@@ -11,8 +11,8 @@ describe LostInTranslations::Base do
 
           def translation_json
             @translation_json ||= {
-              en: { first_name: 'Jon', last_name: 'Snow' },
-              fr: { first_name: 'Jean', last_name: 'Neige' }
+              'en-GB' => { first_name: 'Jon', last_name: 'Snow' },
+              'fr' => { first_name: 'Jean', last_name: 'Neige' }
             }
           end
         end
@@ -23,12 +23,12 @@ describe LostInTranslations::Base do
       end
 
       it 'LostInTranslations.translate must return a translation' do
-        expect(LostInTranslations.translate(@user, :first_name, :en)).to \
+        expect(LostInTranslations.translate(@user, :first_name, 'en-GB')).to \
           eq 'Jon'
       end
 
       it 'calling a field not translated, must return the original data' do
-        I18n.with_locale(:en) do
+        I18n.with_locale('en-GB') do
           expect(@user.last_name).to eq 'Neve'
         end
       end
@@ -55,12 +55,12 @@ describe LostInTranslations::Base do
       end
 
       it 'LostInTranslations.translate must raise an error' do
-        expect { LostInTranslations.translate(@user, :first_name, :en) }.to \
-          raise_error(NotImplementedError)
+        expect { LostInTranslations.translate(@user, :first_name, 'en-GB') }
+          .to raise_error(NotImplementedError)
       end
 
       it 'calling a field not translated, must return the original data' do
-        I18n.with_locale(:en) do
+        I18n.with_locale('en-GB') do
           expect(@user.last_name).to eq 'Neve'
         end
       end

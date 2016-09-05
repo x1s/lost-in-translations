@@ -83,7 +83,9 @@ describe LostInTranslations do
 
       it '#<I18n.available_locales>_unknown should be defined' do
         I18n.available_locales.each do |locale|
-          expect(@user.respond_to?("#{locale}_unknown")).to be true
+          method_name = locale.to_s.downcase.tr('-', '_')
+
+          expect(@user.respond_to?("#{method_name}_unknown")).to be true
         end
       end
     end
@@ -105,7 +107,9 @@ describe LostInTranslations do
 
       it '#<I18n.available_locales>_first_name should be defined' do
         I18n.available_locales.each do |locale|
-          expect(@user.respond_to?("#{locale}_first_name")).to be true
+          method_name = locale.to_s.downcase.tr('-', '_')
+
+          expect(@user.respond_to?("#{method_name}_first_name")).to be true
         end
       end
     end
@@ -172,7 +176,7 @@ describe LostInTranslations do
           translate :first_name
 
           def translation_json
-            { en: { first_name: 'Jon', last_name: 'Snow' } }
+            { 'en-GB' => { first_name: 'Jon', last_name: 'Snow' } }
           end
         end
 
@@ -184,7 +188,7 @@ describe LostInTranslations do
 
       it 'should return the known method results' do
         expect(LostInTranslations.translation_data(@user)).to eq(
-          en: { first_name: 'Jon', last_name: 'Snow' }
+          'en-GB' => { first_name: 'Jon', last_name: 'Snow' }
         )
       end
     end
@@ -218,7 +222,7 @@ describe LostInTranslations do
         LostInTranslations.configure do |config|
           config.translator = Class.new(LostInTranslations::Translator::Base) do
             def self.translation_data(_)
-              { en: { first_name: 'Jon', last_name: 'Snow' } }
+              { 'en-GB' => { first_name: 'Jon', last_name: 'Snow' } }
             end
           end
         end
@@ -238,7 +242,7 @@ describe LostInTranslations do
 
       it 'should return the known method results' do
         expect(LostInTranslations.translation_data(@user)).to eq(
-          en: { first_name: 'Jon', last_name: 'Snow' }
+          'en-GB' => { first_name: 'Jon', last_name: 'Snow' }
         )
       end
     end

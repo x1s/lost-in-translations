@@ -12,8 +12,8 @@ describe LostInTranslations::ActiveRecord do
 
         def translation_data
           @translation_data ||= {
-            en: { first_name: 'Jon', last_name: 'Snow' },
-            fr: { first_name: 'Jean', last_name: 'Neige' }
+            'en-GB' => { first_name: 'Jon', last_name: 'Snow' },
+            'fr' => { first_name: 'Jean', last_name: 'Neige' }
           }
         end
       end
@@ -38,8 +38,8 @@ describe LostInTranslations::ActiveRecord do
 
         def translation_data
           @translation_data ||= {
-            en: { first_name: 'Jon', last_name: 'Snow' },
-            fr: { first_name: 'Jean', last_name: 'Neige' }
+            'en-GB' => { first_name: 'Jon', last_name: 'Snow' },
+            'fr' => { first_name: 'Jean', last_name: 'Neige' }
           }
         end
       end

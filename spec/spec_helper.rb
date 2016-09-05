@@ -15,7 +15,7 @@ require 'pry'
 require 'active_record'
 require 'lost_in_translations'
 
-I18n.available_locales = [:en, :pt, :fr, :de]
+I18n.available_locales = [:'en-GB', :pt, :fr, :de]
 I18n.default_locale = :pt
 
 ActiveRecord::Base.establish_connection(
