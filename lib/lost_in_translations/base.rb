@@ -9,7 +9,7 @@ module LostInTranslations
     def translate(field, locale = I18n.locale)
       translation = LostInTranslations.translate(self, field, locale)
 
-      if translation.nil? && locale.to_sym == I18n.default_locale.to_sym
+      if translation.nil? && fallback_to_default_locale(locale)
         translation = call_original_field(self, field)
       end
 
@@ -18,6 +18,11 @@ module LostInTranslations
 
     def assign_translation(field, value, locale = I18n.locale)
       LostInTranslations.assign_translation(self, field, value, locale)
+    end
+
+    def fallback_to_default_locale(locale)
+      LostInTranslations.config.fallback_to_default_locale ||
+      locale.to_sym == I18n.default_locale.to_sym
     end
 
     module ClassMethods

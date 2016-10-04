@@ -217,6 +217,36 @@ describe LostInTranslations do
       end
     end
 
+    context 'when changing the #config.fallback_to_default_locale' do
+      before do
+        LostInTranslations.configure do |config|
+          config.fallback_to_default_locale = true
+        end
+
+        @user_class = Struct.new(:first_name, :last_name) do
+          include LostInTranslations::Ruby
+
+          translate :first_name
+
+          def translation_data
+            @translation_data ||= {
+              'en-GB' => { first_name: 'Jon' },
+              'fr' => { first_name: 'Jean' }
+            }
+          end
+        end
+
+        @user = @user_class.new('Joao', 'Neve')
+      end
+      after do
+        LostInTranslations.config.fallback_to_default_locale = nil
+      end
+
+      it 'empty translations should return the default locale entry' do
+        expect(@user.de_first_name).to eq 'Joao'
+      end
+    end
+
     context 'when changing the #config.translator' do
       before do
         LostInTranslations.configure do |config|
