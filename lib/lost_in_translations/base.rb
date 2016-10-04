@@ -22,7 +22,7 @@ module LostInTranslations
 
     def fallback_to_default_locale(locale)
       LostInTranslations.config.fallback_to_default_locale ||
-      locale.to_sym == I18n.default_locale.to_sym
+        locale.to_sym == I18n.default_locale.to_sym
     end
 
     module ClassMethods
