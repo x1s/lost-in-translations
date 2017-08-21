@@ -2,6 +2,9 @@ module LostInTranslations
   module Translator
     class Base
       def self.translate(object, field, locale)
+
+        locale = check_forcing_locale(object, locale)
+
         data = translation_data(object)
 
         translations = data[locale.to_sym] || data[locale.to_s] || {}
@@ -41,6 +44,16 @@ module LostInTranslations
         end
 
         translation_data_field
+      end
+
+      def self.check_forcing_locale(object, locale)
+        force_locale_field = object.class.force_locale_field
+
+        if object.respond_to?(force_locale_field)
+          return object.send(force_locale_field)
+        end
+
+        locale
       end
     end
   end
