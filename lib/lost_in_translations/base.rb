@@ -27,10 +27,16 @@ module LostInTranslations
 
     module ClassMethods
       attr_writer :translation_data_field
+      attr_writer :force_locale_field
 
       def translation_data_field
         @translation_data_field ||
           LostInTranslations.config.translation_data_field
+      end
+
+      def force_locale_field
+        @force_locale_field ||
+          LostInTranslations.config.force_locale_field
       end
 
       def translation_fields
