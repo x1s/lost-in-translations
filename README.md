@@ -102,7 +102,7 @@ class CreateUsers < ActiveRecord::Migration
     User.create \
       title: 'Cavaleiro',
       first_name: 'Joao',
-      last_name: 'Neve'
+      last_name: 'Neve',
       translation_data: {
         en: { first_name: 'Jon', last_name: 'Snow' },
         fr: { first_name: 'Jean', last_name: 'Neige' }
@@ -128,7 +128,69 @@ I18n.locale = :fr
 @user.title # returns nil
 ```
 
-## 3) Instalation
+## 3) Forcing locales
+
+There are many cases when you'll need to translate only a part of your data,
+specially if this part is returned in a list of translated data.
+
+For those cases you only have to define the field (virtual or persisted)
+`force_locale` with one valid locale:
+
+```ruby
+class User < ActiveRecord::Base
+  include LostInTranslations
+
+  translate :title, :first_name
+end
+
+User.create(
+  title: 'Cavaleiro',
+  first_name: 'Joao',
+  last_name: 'Neve',
+  force_locale: nil,
+  translation_data: {
+    en: { first_name: 'Jon', last_name: 'Snow' },
+    fr: { first_name: 'Jean', last_name: 'Neige' }
+  }
+)
+
+User.create(
+  title: 'Cavaleiro',
+  first_name: 'Joao',
+  last_name: 'Neve',
+  force_locale: 'fr'
+  translation_data: {
+    en: { first_name: 'Jon', last_name: 'Snow' },
+    fr: { first_name: 'Jean', last_name: 'Neige' }
+  }
+)
+
+User.create(
+  title: 'Cavaleiro',
+  first_name: 'Joao',
+  last_name: 'Neve',
+  force_locale: 'en'
+  translation_data: {
+    en: { first_name: 'Jon', last_name: 'Snow' },
+    fr: { first_name: 'Jean', last_name: 'Neige' }
+  }
+)
+
+I18n.locale = :pt
+
+User.all.each do |user|
+  puts user.name
+end
+
+# It'll automatically output:
+# Joao
+# Jean
+# Jon
+
+```
+
+
+## 4) Instalation
 
 Add this to your Gemfile:
 ```
@@ -147,7 +209,7 @@ LostInTranslations.reload
 ```
 Because Rails starts with a set of **I18n.available_locales** different from when it finished loading and **LostInTranslations** needs to redefine new methods for those new locales in your classes.
 
-## 4) F.A.Q.
+## 5) F.A.Q.
 
 - [I18n.available_locales as changed, how do I recreate the new translation methods?](https://github.com/Streetbees/lost-in-translations/wiki/Redefining-translation-methods)
 - [Your "translation_data" method (in all of your objects) is not called "translation_data"](https://github.com/Streetbees/lost-in-translations/wiki/translation_data-configuration-version-1)
