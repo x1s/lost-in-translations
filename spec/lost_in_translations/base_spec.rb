@@ -70,22 +70,34 @@ describe LostInTranslations::Base do
   describe '.force_locale_field =' do
     context 'when forces a locale' do
       before do
-        @user_class = Struct.new(:first_name, :last_name, :title, :force_locale) do
+        @user_class = Struct.new(
+          :first_name,
+          :last_name,
+          :title,
+          :force_locale) do
           include LostInTranslations::Base
 
           self.translation_data_field = :translation_json
 
           def translation_json
             @translation_json ||= {
-              'en-GB' => { first_name: 'Jon', last_name: 'Snow', title: 'King of the North' },
+              'en-GB' => {
+                first_name: 'Jon',
+                last_name: 'Snow',
+                title: 'King of the North'
+              },
               'fr' => { first_name: 'Jean', last_name: 'Neige' }
             }
           end
         end
 
-        LostInTranslations.define_translation_methods(@user_class, :first_name, :title)
+        LostInTranslations.define_translation_methods(
+          @user_class,
+          :first_name,
+          :title
+        )
 
-        @user = @user_class.new('Joao', 'Neve', 'Rei do Norte' , 'fr')
+        @user = @user_class.new('Joao', 'Neve', 'Rei do Norte', 'fr')
       end
 
       it 'LostInTranslations.translate must return a forced translation' do

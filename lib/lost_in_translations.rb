@@ -16,7 +16,12 @@ module LostInTranslations
   end
 
   def self.config
-    @config ||= Config.new('translation_data', Translator::Base, nil, 'force_locale')
+    @config ||= Config.new(
+      'translation_data',
+      Translator::Base,
+      nil,
+      'force_locale'
+    )
   end
 
   def self.translate(*args)
